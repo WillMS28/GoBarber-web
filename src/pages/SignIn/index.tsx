@@ -47,15 +47,17 @@ const SignIn: React.FC = () => {
 
     } catch (err) {
 
-      const errors = getValidationErros(err)
+      if (err instanceof Yup.ValidationError) {
 
-      formRef.current?.setErrors(errors)
+        const errors = getValidationErros(err)
 
+        formRef.current?.setErrors(errors)
+      }
 
+      // disparar um toast
 
       const errorToJSON = JSON.stringify(err)
       const JSONToObj = JSON.parse(errorToJSON)
-
       console.log(JSONToObj)
     }
   }, [signIn])
@@ -66,7 +68,7 @@ const SignIn: React.FC = () => {
         <img src={logoImg} alt="GoBarber" />
 
         <Form ref={formRef} onSubmit={handleSubmit}>
-          <h1>Faça seu longon</h1>
+          <h1>Faça seu logon</h1>
 
           <Input
             name='email'
