@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 import { ToastMessages, useToast } from '../../../hooks/Toast'
 
@@ -12,6 +12,16 @@ interface ToastProps {
 
 const Toast: React.FC<ToastProps> = ({ message }) => {
   const { removeToast } = useToast()
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      removeToast(message.id)
+    }, 3000);
+
+    return () => {
+      clearTimeout(timer)
+    }
+  }, [removeToast, message.id])
 
   return (
     <Container
