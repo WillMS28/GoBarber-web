@@ -56,7 +56,11 @@ const SignIn: React.FC = () => {
         formRef.current?.setErrors(errors)
       }
 
-      addToast()
+      addToast({
+        title: 'Erro na autenticação',
+        description: 'ocorreu um erro ao fazer login, chegue suas credenciais',
+        type: 'error'
+      })
 
       //const errorToJSON = JSON.stringify(err)
       //const JSONToObj = JSON.parse(errorToJSON)
