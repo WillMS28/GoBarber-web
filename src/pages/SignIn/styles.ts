@@ -44,7 +44,7 @@ export const AnimationContainer = styled.div`
   width: 100%;
   max-width: 700px;
 
-  animation: ${appearFromLeft} 1.5s;
+  animation: ${appearFromLeft} 1s;
 
   h1 {
       margin-bottom: 24px;
