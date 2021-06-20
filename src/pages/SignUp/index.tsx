@@ -3,8 +3,11 @@ import { FiArrowLeft, FiLock, FiUser, FiMail } from 'react-icons/fi'
 import { FormHandles } from '@unform/core'
 import { Form } from '@unform/web'
 import * as Yup from 'yup'
-import { Link } from 'react-router-dom'
+import { Link, useHistory } from 'react-router-dom'
 
+import api from '../../services/api'
+
+import { useToast } from '../../hooks/Toast'
 
 import getValidationErros from '../../util/getValidationErros'
 
@@ -15,10 +18,18 @@ import Button from '../../components/Button'
 
 import { Container, Content, AnimationContainer, Background } from './styles'
 
+interface SignUpFormData {
+  name: string
+  email: string
+  password: string
+}
+
 const SignUp: React.FC = () => {
   const formRef = useRef<FormHandles>(null)
+  const { addToast } = useToast()
+  const history = useHistory()
 
-  const handleSubmit = useCallback(async ( data: object ) => {
+  const handleSubmit = useCallback(async ( data: SignUpFormData ) => {
     try {
       formRef.current?.setErrors({})
 
@@ -32,21 +43,40 @@ const SignUp: React.FC = () => {
       await schema.validate(data, {
         abortEarly: false
       })
+      // registrando o usuario no banco de dados
+      await api.post('/users', data)
+      // redirecionando a pagina principal
+      history.push('/')
+
+      addToast({
+        title: 'Cadastro realizado!',
+        description: 'Seu cadastro foi realizado com sucesso, você já pode fazer longon no GoBarber!',
+        type: 'success'
+      })
 
     } catch (err) {
 
-      const errors = getValidationErros(err)
+      if (err instanceof Yup.ValidationError) {
 
-      formRef.current?.setErrors(errors)
+        const errors = getValidationErros(err)
 
+        formRef.current?.setErrors(errors)
 
+        return
+      }
 
-      const errorToJSON = JSON.stringify(err)
-      const JSONToObj = JSON.parse(errorToJSON)
+      addToast({
+        title: 'Erro no cadastro',
+        description: 'ocorreu um erro ao fazer o cadastro, tente novamente.',
+        type: 'error'
+      })
 
-      console.log(JSONToObj)
+      //const errorToJSON = JSON.stringify(err)
+      //const JSONToObj = JSON.parse(errorToJSON)
+
+      //console.log(JSONToObj)
     }
-  }, [])
+  }, [addToast, history])
 
   return (
     <Container>
