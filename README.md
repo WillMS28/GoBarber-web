@@ -21,6 +21,7 @@
 
 - [x] Cadastro na aplicação.
 - [x] Validação de existencia de email.
+- [x] Upload Avatar
 - [x] Login na aplicação.
 - [x] Redirecionamento apos login efetuado.
 - [x] Validação de email e senha.
